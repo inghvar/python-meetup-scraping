@@ -19,7 +19,7 @@ search_element_2.send_keys(Keys.RETURN)
 time.sleep(10)
 #driver.save_screenshot('screen.png')
 
-search_elements = driver.find_elements_by_xpath('//ul[contains(@class, "search-result")]//a[contains(@class, "display-none") and contains(@href, "http://www.meetup.com/')
+search_elements = driver.find_elements_by_css_selector('p.small.ellipsize')
 for link in search_elements:
 	print(link.get_attribute('href'))
 	links.append(link)
