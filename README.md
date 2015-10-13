@@ -1,2 +1,2 @@
 # python-meetup-scraping
-python meetup scraping script, use Beautiful Soup &amp; PhantomJS
+python meetup scraping script, use Beautiful Soup &amp; Selenium
