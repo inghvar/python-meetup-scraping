@@ -2,8 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 
+from bs4 import BeautifulSoup
+import csv
+import urllib2
+
 links = []
-query_event = raw_input('Enter query, for instance event\n')
+row = []
+query_event = raw_input('Enter query, for instance python\n')
 query_sity = raw_input('Enter query, for instance San-Diego\n')
 
 driver = webdriver.Firefox()
@@ -23,7 +28,28 @@ time.sleep(10)
 search_elements = driver.find_elements_by_class_name('display-none')
 for link in search_elements:
 	#print(link.get_attribute('href'))
-	links.append(link)
+	links.append(link.get_attribute('href'))
 
 driver.close()
 
+USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 5.2; en-CA; rv:1.9.2.4) Gecko/20100523 Firefox/3.6.4"
+
+for link in links:
+    if link:
+        with open('out.csv', 'a') as f:
+            csvwriter = csv.writer(f, delimiter=',', dialect='excel')
+            url = link
+            try:
+		hdr = {'User-Agent': USER_AGENT}
+	        req = urllib2.Request(link, headers=hdr)
+                page = urllib2.urlopen(req)
+            except urllib2.HTTPError, error:
+                print error
+	    soup = BeautifulSoup(page, 'html.parser')
+	    div = soup.find("div", {"id": "groupDesc"})
+	    row.append(link)
+	    row.append(div.text.encode('utf-8'))
+	    csvwriter.writerow(row)
+	    row = []
+
+print "scraping complete"
